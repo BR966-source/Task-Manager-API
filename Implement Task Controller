@@ -1,0 +1,38 @@
+// controllers/taskController.js
+const Task = require('../models/Task');
+
+exports.createTask = (req, res) => {
+  Task.create(req.body, (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.status(201).json({ message: 'Task created', taskId: results.insertId });
+  });
+};
+
+exports.getAllTasks = (req, res) => {
+  Task.getAll((err, tasks) => {
+    if (err) return res.status(500).json(err);
+    res.json(tasks);
+  });
+};
+
+exports.getTaskById = (req, res) => {
+  Task.getById(req.params.id, (err, task) => {
+    if (err) return res.status(500).json(err);
+    if (!task.length) return res.status(404).json({ message: 'Task not found' });
+    res.json(task[0]);
+  });
+};
+
+exports.updateTask = (req, res) => {
+  Task.update(req.params.id, req.body, (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json({ message: 'Task updated' });
+  });
+};
+
+exports.deleteTask = (req, res) => {
+  Task.delete(req.params.id, (err) => {
+    if (err) return res.status(500).json(err);
+    res.json({ message: 'Task deleted' });
+  });
+};
